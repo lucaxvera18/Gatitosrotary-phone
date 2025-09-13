@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Para la más linda ❤️</title>
+<style>
+  html,body {margin:0;height:100%;background:#000;overflow:hidden;}
+  canvas {display:block;width:100vw;height:100vh;image-rendering:pixelated;}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<script>
+const canvas=document.getElementById("c");
+const ctx=canvas.getContext("2d");
+let W,H;
+function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
+window.onresize=resize;resize();
+
+// estrellas
+const stars=[...Array(200)].map(()=>({x:Math.random()*W,y:Math.random()*H,s:Math.random()<0.7?1:2}));
+
+// corazones (partículas)
+function drawHeart(x,y,s,color){
+  ctx.fillStyle=color;
+  ctx.beginPath();
+  ctx.moveTo(x,y);
+  ctx.bezierCurveTo(x-s,y-s,x-2*s,y+0.5*s,x,y+2*s);
+  ctx.bezierCurveTo(x+2*s,y+0.5*s,x+s,y-s,x,y);
+  ctx.fill();
+}
+let parts=[];
+
+// gatitos (simples sprites en esquinas)
+function drawCat(x,y,flip=false){
+  ctx.save();
+  ctx.translate(x,y);
+  if(flip)ctx.scale(-1,1);
+  ctx.fillStyle="white";
+  ctx.beginPath();ctx.arc(0,0,30,0,Math.PI*2);ctx.fill(); // cabeza
+  ctx.fillRect(-20,25,40,20); // cuerpo
+  ctx.fillStyle="pink";
+  ctx.beginPath();ctx.arc(-15,-15,10,0,Math.PI*2);ctx.fill(); // oreja
+  ctx.beginPath();ctx.arc(15,-15,10,0,Math.PI*2);ctx.fill();
+  ctx.restore();
+}
+
+// curva de corazón gigante
+function heartPath(t){
+  // ecuación paramétrica de un corazón
+  const x=16*Math.pow(Math.sin(t),3);
+  const y=13*Math.cos(t)-5*Math.cos(2*t)-2*Math.cos(3*t)-Math.cos(4*t);
+  return {x,y};
+}
+let shape=[];
+for(let i=0;i<200;i++){
+  const p=heartPath(Math.PI*2*i/200);
+  shape.push({x:p.x,y:-p.y}); // invertimos Y
+}
+
+// mensaje
+const message="para la más linda ❤️";
+
+// animación
+let frame=0;
+function loop(){
+  frame++;
+  ctx.fillStyle="#050017";
+  ctx.fillRect(0,0,W,H);
+  // estrellas
+  ctx.fillStyle="white";
+  for(const s of stars)ctx.fillRect(s.x,s.y,s.s,s.s);
+
+  // emitir corazones
+  if(frame%3===0){
+    parts.push({x:80,y:H-100,vx:Math.random()*2,vy:-3-Math.random()*2,c:"red",life:0});
+    parts.push({x:W-80,y:H-100,vx:-Math.random()*2,vy:-3-Math.random()*2,c:"red",life:0});
+  }
+  // actualizar partículas
+  for(const p of parts){
+    p.life++;
+    // durante cierta parte, se atraen al corazón grande
+    if(frame>200){
+      const target=shape[p.life%shape.length];
+      const scale=Math.min(W,H)/40;
+      const cx=W/2+target.x*scale;
+      const cy=H/2+target.y*scale;
+      p.x+=(cx-p.x)*0.05;
+      p.y+=(cy-p.y)*0.05;
+    }else{
+      p.vy+=0.05;
+      p.x+=p.vx;p.y+=p.vy;
+    }
+  }
+  // dibujar partículas
+  for(const p of parts)drawHeart(p.x,p.y,6,p.c);
+
+  // gatos
+  drawCat(80,H-80,false);
+  drawCat(W-80,H-80,true);
+
+  // mensaje
+  if(frame>250){
+    ctx.fillStyle="pink";
+    ctx.font=`bold ${Math.floor(W/15)}px Arial`;
+    ctx.textAlign="center";
+    ctx.fillText(message,W/2,H/6);
+  }
+  requestAnimationFrame(loop);
+}
+loop();
+</script>
+</body>
+</html>
