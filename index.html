@@ -1,16 +1,3 @@
-<!doctype html>
-<html lang="es">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Para la más linda ❤️</title>
-<style>
-  html,body {margin:0;height:100%;background:#000;overflow:hidden;}
-  canvas {display:block;width:100vw;height:100vh;image-rendering:pixelated;}
-</style>
-</head>
-<body>
-<canvas id="c"></canvas>
 <script>
 const canvas=document.getElementById("c");
 const ctx=canvas.getContext("2d");
@@ -59,7 +46,8 @@ function createTextParticles(){
   const octx=off.getContext("2d");
   off.width=W;off.height=H/2;
   octx.fillStyle="white";
-  octx.font=`bold ${Math.floor(H/8)}px "Press Start 2P","Courier New",monospace`;
+  // Nota: Asegúrate de cargar la fuente "Press Start 2P" en tu HTML para que se vea bien.
+  octx.font=`bold ${Math.floor(H/10)}px "Press Start 2P","Courier New",monospace`;
   octx.textAlign="center";octx.textBaseline="middle";
   octx.fillText(message,off.width/2,off.height/2);
 
@@ -118,6 +106,10 @@ function loop(){
         p.life++;
         p.vx+=(p.tx-p.x)*0.01;
         p.vy+=(p.ty-p.y)*0.01;
+        // === INICIO DE LA CORRECCIÓN ===
+        p.vx *= 0.95; // Fricción
+        p.vy *= 0.95; // Fricción
+        // === FIN DE LA CORRECCIÓN ===
         p.x+=p.vx;p.y+=p.vy;
         ctx.fillStyle="pink";
         ctx.fillRect(p.x,p.y,4,4);
@@ -146,5 +138,3 @@ loop();
 // repetir cada 10 segundos
 setInterval(createFirework,10000);
 </script>
-</body>
-</html>
