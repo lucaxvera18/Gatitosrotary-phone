@@ -47,12 +47,18 @@
         }
         .stars {
             background: transparent url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEgAACxIB0t1+/AAAABZ0RVh0Q3JlYXRpb24gVGltZQAxMS8xMi8xMlhq0aEAAAAcdEVYdFNvZnR3YXJlAEFkb2JlIEZpcmV3b3JrcyBDUzbovLKMAAAAVklEQVRoQ+3SSwoAIAwEwfz/07tSo9sGZHYv3UVICJnLSEEi5gJIIiYTQCI2EkAiNhJAIjYSQCI2EkAiNhJAIjYSQCI2EkAiNhJAIjYSQCI2EkAiNhJA8nEDVjAAVYyXv3cAAAAASUVORK5CYII=) repeat top left; z-index: 0;
+            animation: twinkle-more 5s infinite ease-in-out alternate; /* Animación de parpadeo añadida */
         }
         .twinkling {
-            background: transparent url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEgAACxIB0t1+/AAAABZ0RVh0Q3JlYXRpb24gVGltZQAxMS8xMi8xMlhq0aEAAAAcdEVYdFNvZnR3YXJlAEFkb2JlIEZpcmV3b3JrcyBDUzbovLKMAAAAbElEQVRoQ+3SwQkAIBADwf7/02eBQTkS050FakISkCSImiCIiQiIiQiIiQiIiQiIiQiIiQiIiQiIiQiIiQiIiQiIiQiIiQiIiQiIiQiIiQiIiQiIiQiIiQiIiQiIiQiIiQgIiT0BDNoVCgAlL3eIAAAAAElFTkSuQmCC) repeat top left;
+            background: transparent url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEgAACxIB0t1+/AAAABZ0RVh0Q3JlYXRpb24gVGltZQAxMS8xMi8xMlhq0aEAAAAcdEVHdnNfBkbovLKMAAAAbElEQVRoQ+3SwQkAIBADwf7/02eBQTkS050FakISkCSImiCIiQiIiQiIiQiIiQiIiQiIiQiIiQiIiQiIiQiIiQiIiQiIiQiIiQiIiQiIiQiIiQiIiQiIiQiIiQiIiQiIiQgIiT0BDNoVCgAlL3eIAAAAAElFTkSuQmCC) repeat top left;
             animation: move-twink-back 200s linear infinite; z-index: 1;
         }
         @keyframes move-twink-back { from { background-position: 0 0; } to { background-position: -10000px 5000px; } }
+        /* Nueva animación de parpadeo */
+        @keyframes twinkle-more {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
 
         .shooting-star {
             position: absolute; left: 50%; top: 50%; height: 2px; background: linear-gradient(-45deg, var(--star-color), rgba(255, 255, 255, 0));
@@ -68,11 +74,57 @@
         .firework:nth-child(1) { left: 20%; top: 30%; animation-delay: 0s; }
         .firework:nth-child(2) { left: 80%; top: 40%; animation-delay: 0.5s; }
         .firework:nth-child(3) { left: 50%; top: 60%; animation-delay: 1s; }
-        .firework::before { content: ''; position: absolute; width: 3px; height: 15px; background: gold; border-radius: 2px;
-            filter: drop-shadow(0 0 5px gold); animation: launch 2s infinite ease-in; }
-        .firework::after { content: ''; position: absolute; width: 4px; height: 4px; border-radius: 50%; opacity: 0; animation: explode 2s infinite ease-out; }
-        @keyframes launch { 0% { transform: translateY(150px); opacity: 1; } 50% { transform: translateY(0); opacity: 1; } 51%, 100% { transform: translateY(0); opacity: 0; } }
-        @keyframes explode { 0%, 50% { opacity: 0; transform: scale(0.5); } 51% { opacity: 1; } 100% { opacity: 0; transform: scale(20); } }
+
+        .firework::before { /* Cohete subiendo */
+            content: ''; position: absolute; width: 3px; height: 15px; background: gold; border-radius: 2px;
+            filter: drop-shadow(0 0 5px gold); animation: launch 2s infinite ease-in;
+        }
+
+        .firework::after { /* Simula la explosión inicial */
+            content: ''; position: absolute; width: 4px; height: 4px; border-radius: 50%; opacity: 0; animation: explode 2s infinite ease-out;
+            background: var(--star-color); /* Color de la explosión */
+            box-shadow: 0 0 15px var(--star-color);
+        }
+
+        /* Contenedor de partículas para la explosión detallada */
+        .firework-particles {
+            position: absolute; width: 0; height: 0;
+            animation: firework-spread 2s infinite ease-out;
+            opacity: 0;
+        }
+        .firework:nth-child(1) .firework-particles { animation-delay: 0s; }
+        .firework:nth-child(2) .firework-particles { animation-delay: 0.5s; }
+        .firework:nth-child(3) .firework-particles { animation-delay: 1s; }
+
+        .firework-particle {
+            position: absolute; width: 3px; height: 3px; background: gold; border-radius: 50%;
+            opacity: 0;
+            transform: translate(-50%, -50%); /* Centra la partícula */
+        }
+
+        @keyframes launch {
+            0% { transform: translateY(150px); opacity: 1; }
+            50% { transform: translateY(0); opacity: 1; }
+            51%, 100% { transform: translateY(0); opacity: 0; }
+        }
+        @keyframes explode {
+            0%, 50% { opacity: 0; transform: scale(0.5); }
+            51% { opacity: 1; }
+            100% { opacity: 0; transform: scale(20); }
+        }
+        /* Animación para la dispersión de partículas */
+        @keyframes firework-spread {
+            0%, 50% { opacity: 0; transform: scale(0); } /* No visible durante el lanzamiento */
+            51% { opacity: 1; transform: scale(0.1); } /* Aparece al inicio de la explosión */
+            100% { opacity: 0; transform: scale(2); } /* Se expande y desvanece */
+        }
+        /* Animación individual para cada partícula dentro de la explosión */
+        @keyframes particle-fade {
+            0%, 50% { opacity: 0; transform: translate(0,0) scale(0.5); }
+            51% { opacity: 1; transform: translate(0,0) scale(1); }
+            100% { opacity: 0; transform: translate(var(--x), var(--y)) scale(0); }
+        }
+
 
         /* --- Contenido Principal: Mensaje y Corazón --- */
         .animated-content {
@@ -177,9 +229,48 @@
         <div class="shooting-star"></div>
         <div class="shooting-star"></div>
         
-        <div class="firework"></div>
-        <div class="firework"></div>
-        <div class="firework"></div>
+        <div class="firework">
+            <div class="firework-particles">
+                <div class="firework-particle" style="--x: 50px; --y: -50px; animation-delay: 0.1s;"></div>
+                <div class="firework-particle" style="--x: -40px; --y: -60px; animation-delay: 0.2s;"></div>
+                <div class="firework-particle" style="--x: 70px; --y: -30px; animation-delay: 0.3s;"></div>
+                <div class="firework-particle" style="--x: -30px; --y: 40px; animation-delay: 0.4s;"></div>
+                <div class="firework-particle" style="--x: 60px; --y: 20px; animation-delay: 0.5s;"></div>
+                <div class="firework-particle" style="--x: -50px; --y: 50px; animation-delay: 0.6s;"></div>
+                <div class="firework-particle" style="--x: 20px; --y: -70px; animation-delay: 0.7s;"></div>
+                <div class="firework-particle" style="--x: -70px; --y: -20px; animation-delay: 0.8s;"></div>
+                <div class="firework-particle" style="--x: 40px; --y: 60px; animation-delay: 0.9s;"></div>
+                <div class="firework-particle" style="--x: -60px; --y: -40px; animation-delay: 1s;"></div>
+            </div>
+        </div>
+        <div class="firework">
+            <div class="firework-particles">
+                <div class="firework-particle" style="--x: 55px; --y: -55px; animation-delay: 0.1s;"></div>
+                <div class="firework-particle" style="--x: -45px; --y: -65px; animation-delay: 0.2s;"></div>
+                <div class="firework-particle" style="--x: 75px; --y: -35px; animation-delay: 0.3s;"></div>
+                <div class="firework-particle" style="--x: -35px; --y: 45px; animation-delay: 0.4s;"></div>
+                <div class="firework-particle" style="--x: 65px; --y: 25px; animation-delay: 0.5s;"></div>
+                <div class="firework-particle" style="--x: -55px; --y: 55px; animation-delay: 0.6s;"></div>
+                <div class="firework-particle" style="--x: 25px; --y: -75px; animation-delay: 0.7s;"></div>
+                <div class="firework-particle" style="--x: -75px; --y: -25px; animation-delay: 0.8s;"></div>
+                <div class="firework-particle" style="--x: 45px; --y: 65px; animation-delay: 0.9s;"></div>
+                <div class="firework-particle" style="--x: -65px; --y: -45px; animation-delay: 1s;"></div>
+            </div>
+        </div>
+        <div class="firework">
+            <div class="firework-particles">
+                <div class="firework-particle" style="--x: 50px; --y: -50px; animation-delay: 0.1s;"></div>
+                <div class="firework-particle" style="--x: -40px; --y: -60px; animation-delay: 0.2s;"></div>
+                <div class="firework-particle" style="--x: 70px; --y: -30px; animation-delay: 0.3s;"></div>
+                <div class="firework-particle" style="--x: -30px; --y: 40px; animation-delay: 0.4s;"></div>
+                <div class="firework-particle" style="--x: 60px; --y: 20px; animation-delay: 0.5s;"></div>
+                <div class="firework-particle" style="--x: -50px; --y: 50px; animation-delay: 0.6s;"></div>
+                <div class="firework-particle" style="--x: 20px; --y: -70px; animation-delay: 0.7s;"></div>
+                <div class="firework-particle" style="--x: -70px; --y: -20px; animation-delay: 0.8s;"></div>
+                <div class="firework-particle" style="--x: 40px; --y: 60px; animation-delay: 0.9s;"></div>
+                <div class="firework-particle" style="--x: -60px; --y: -40px; animation-delay: 1s;"></div>
+            </div>
+        </div>
 
         <div class="animated-content">
             <div class="message">Para la más linda</div>
