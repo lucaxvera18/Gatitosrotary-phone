@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="utf-8">
@@ -14,129 +14,170 @@
 <body>
 <canvas id="c"></canvas>
 <script>
-const canvas=document.getElementById("c");
-const ctx=canvas.getContext("2d");
-let W,H;
-function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
-window.onresize=resize;resize();
+const canvas = document.getElementById("c");
+const ctx = canvas.getContext("2d");
+let W, H;
+
+function resize() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+window.onresize = resize;
+resize();
 
 // Estrellas
-const stars=[...Array(200)].map(()=>({x:Math.random()*W,y:Math.random()*H,s:Math.random()<0.7?1:2}));
+const stars = [...Array(200)].map(() => ({
+  x: Math.random() * W,
+  y: Math.random() * H,
+  s: Math.random() < 0.7 ? 1 : 2
+}));
 
-// Corazones
-function drawHeart(x,y,s,color){
-  ctx.fillStyle=color;
+// Corazones (no se están usando en el código, pero los he dejado por si quieres reincorporarlos)
+function drawHeart(x, y, s, color) {
+  ctx.fillStyle = color;
   ctx.beginPath();
-  ctx.moveTo(x,y);
-  ctx.bezierCurveTo(x-s,y-s,x-2*s,y+0.5*s,x,y+2*s);
-  ctx.bezierCurveTo(x+2*s,y+0.5*s,x+s,y-s,x,y);
+  ctx.moveTo(x, y);
+  ctx.bezierCurveTo(x - s, y - s, x - 2 * s, y + 0.5 * s, x, y + 2 * s);
+  ctx.bezierCurveTo(x + 2 * s, y + 0.5 * s, x + s, y - s, x, y);
   ctx.fill();
 }
 
 // Gatitos (subidos un poco)
-function drawCat(x,y,flip=false){
+function drawCat(x, y, flip = false) {
   ctx.save();
-  ctx.translate(x,y);
-  if(flip)ctx.scale(-1,1);
-  ctx.fillStyle="white";
-  ctx.beginPath();ctx.arc(0,0,30,0,Math.PI*2);ctx.fill(); // cabeza
-  ctx.fillRect(-20,25,40,20); // cuerpo
-  ctx.fillStyle="pink";
-  ctx.beginPath();ctx.arc(-15,-15,10,0,Math.PI*2);ctx.fill(); // oreja
-  ctx.beginPath();ctx.arc(15,-15,10,0,Math.PI*2);ctx.fill();
+  ctx.translate(x, y);
+  if (flip) ctx.scale(-1, 1);
+  ctx.fillStyle = "white";
+  ctx.beginPath();
+  ctx.arc(0, 0, 30, 0, Math.PI * 2);
+  ctx.fill(); // cabeza
+  ctx.fillRect(-20, 25, 40, 20); // cuerpo
+  ctx.fillStyle = "pink";
+  ctx.beginPath();
+  ctx.arc(-15, -15, 10, 0, Math.PI * 2);
+  ctx.fill(); // oreja izquierda
+  ctx.beginPath();
+  ctx.arc(15, -15, 10, 0, Math.PI * 2);
+  ctx.fill(); // oreja derecha
   ctx.restore();
 }
 
 // Fuegos artificiales
 let firework;
-const message="Para la más linda ❤️";
-const colors=["#ff2d2d","#ff7f00","#ffff3d","#3dff4a","#2dbbff","#ff2dfd"];
+const message = "Para la más linda ❤️";
+const colors = ["#ff2d2d", "#ff7f00", "#ffff3d", "#3dff4a", "#2dbbff", "#ff2dfd"];
 
-function createFirework(){
-  firework={x:W/2,y:H,vy:-6,explode:false,particles:[],sparks:[],done:false};
+function createFirework() {
+  firework = {
+    x: W / 2,
+    y: H,
+    vy: -6,
+    explode: false,
+    particles: [],
+    sparks: [],
+    done: false
+  };
 }
 
-function createTextParticles(){
-  const off=document.createElement("canvas");
-  const octx=off.getContext("2d");
-  off.width=W;off.height=H/2;
-  octx.fillStyle="white";
-  octx.font=`bold ${Math.floor(H/10)}px "Press Start 2P","Courier New",monospace`;
-  octx.textAlign="center";octx.textBaseline="middle";
-  octx.fillText(message,off.width/2,off.height/2);
+function createTextParticles() {
+  const off = document.createElement("canvas");
+  const octx = off.getContext("2d");
+  off.width = W;
+  off.height = H / 2;
+  octx.fillStyle = "white";
+  octx.font = `bold ${Math.floor(H / 10)}px "Press Start 2P", "Courier New", monospace`;
+  octx.textAlign = "center";
+  octx.textBaseline = "middle";
+  octx.fillText(message, off.width / 2, off.height / 2);
 
-  const d=octx.getImageData(0,0,off.width,off.height).data;
-  const pts=[];
-  for(let y=0;y<off.height;y+=6){
-    for(let x=0;x<off.width;x+=6){
-      if(d[(y*off.width+x)*4+3]>128){
-        pts.push({x,y});
+  const d = octx.getImageData(0, 0, off.width, off.height).data;
+  const pts = [];
+  // Se ha aumentado la densidad para un texto más detallado
+  for (let y = 0; y < off.height; y += 4) {
+    for (let x = 0; x < off.width; x += 4) {
+      if (d[(y * off.width + x) * 4 + 3] > 128) {
+        pts.push({ x, y });
       }
     }
   }
-  firework.particles=pts.map(p=>({
-    x:firework.x,y:firework.y,
-    tx:p.x,ty:p.y,
-    vx:(Math.random()-0.5)*4,vy:(Math.random()-0.5)*4,
-    life:0
+
+  // Se inicializa cada partícula de texto con una velocidad aleatoria
+  firework.particles = pts.map(p => ({
+    x: firework.x,
+    y: firework.y,
+    tx: p.x,
+    ty: p.y,
+    vx: (Math.random() - 0.5) * 8, // Velocidad inicial más alta para el efecto de explosión
+    vy: (Math.random() - 0.5) * 8,
+    life: 0
   }));
 
   // Chispas de colores
-  firework.sparks=[...Array(100)].map(()=>({
-    x:firework.x,y:firework.y,
-    vx:(Math.random()-0.5)*8,
-    vy:(Math.random()-0.5)*8,
-    color:colors[Math.floor(Math.random()*colors.length)],
-    life:60+Math.random()*40
+  firework.sparks = [...Array(100)].map(() => ({
+    x: firework.x,
+    y: firework.y,
+    vx: (Math.random() - 0.5) * 10, // Aumento de velocidad inicial para las chispas
+    vy: (Math.random() - 0.5) * 10,
+    color: colors[Math.floor(Math.random() * colors.length)],
+    life: 60 + Math.random() * 40
   }));
 }
 
 // Animación
-function loop(){
-  ctx.fillStyle="#050017";
-  ctx.fillRect(0,0,W,H);
+function loop() {
+  ctx.fillStyle = "rgba(5, 0, 23, 0.1)"; // Fondo con transparencia para un rastro de las estrellas y chispas
+  ctx.fillRect(0, 0, W, H);
 
   // Estrellas
-  ctx.fillStyle="white";
-  for(const s of stars)ctx.fillRect(s.x,s.y,s.s,s.s);
+  ctx.fillStyle = "white";
+  for (const s of stars) ctx.fillRect(s.x, s.y, s.s, s.s);
 
   // Gatos
-  drawCat(80,H-140,false);
-  drawCat(W-80,H-140,true);
+  drawCat(80, H - 140, false);
+  drawCat(W - 80, H - 140, true);
 
   // Fuegos artificiales
-  if(firework){
-    if(!firework.explode){
-      ctx.fillStyle="red";
-      ctx.fillRect(firework.x-2,firework.y-10,4,10);
-      firework.y+=firework.vy;
-      if(firework.y<H/3){
-        firework.explode=true;
+  if (firework) {
+    if (!firework.explode) {
+      // El cohete que sube
+      ctx.fillStyle = "pink"; // Color del cohete, cambiado a rosa
+      ctx.fillRect(firework.x - 2, firework.y - 10, 4, 10);
+      firework.y += firework.vy;
+      // Condición de explosión basada en un punto relativo a la altura
+      if (firework.y < H / 2) {
+        firework.explode = true;
         createTextParticles();
       }
     } else {
       // Partículas del texto
-      for(const p of firework.particles){
+      for (const p of firework.particles) {
         p.life++;
-        p.vx+=(p.tx-p.x)*0.01;
-        p.vy+=(p.ty-p.y)*0.01;
-        // --- INICIO DE LA CORRECCIÓN ---
-        p.vx *= 0.95; // Fricción para que no oscile
-        p.vy *= 0.95; // Fricción para que no oscile
-        // --- FIN DE LA CORRECCIÓN ---
-        p.x+=p.vx;p.y+=p.vy;
-        ctx.fillStyle="pink";
-        ctx.fillRect(p.x,p.y,4,4);
+        // Corrección: el texto se mueve hacia su posición objetivo
+        p.vx += (p.tx - p.x) * 0.005;
+        p.vy += (p.ty - p.y) * 0.005;
+
+        p.vx *= 0.95; // Fricción para un movimiento más suave
+        p.vy *= 0.95;
+
+        p.x += p.vx;
+        p.y += p.vy;
+
+        ctx.fillStyle = "pink";
+        // Tamaño de las partículas
+        const size = Math.max(0, 4 - p.life * 0.05);
+        ctx.fillRect(p.x, p.y, size, size);
       }
       // Chispas
-      for(const s of firework.sparks){
-        if(s.life>0){
+      for (const s of firework.sparks) {
+        if (s.life > 0) {
           s.life--;
-          s.x+=s.vx;
-          s.y+=s.vy;
-          s.vy+=0.05; // Gravedad para las chispas
-          ctx.fillStyle=s.color;
-          ctx.fillRect(s.x,s.y,3,3);
+          s.x += s.vx;
+          s.y += s.vy;
+          s.vy += 0.05; // Gravedad para las chispas
+          ctx.fillStyle = s.color;
+          // Reducción del tamaño de la chispa con el tiempo
+          const sparkSize = Math.max(0, s.life * 0.05);
+          ctx.fillRect(s.x, s.y, sparkSize, sparkSize);
         }
       }
     }
@@ -145,12 +186,10 @@ function loop(){
   requestAnimationFrame(loop);
 }
 
-// Lanzar fuego artificial inicial
+// Inicia el primer fuego artificial y lo repite cada 10 segundos
 createFirework();
 loop();
-
-// Repetir cada 10 segundos
-setInterval(createFirework,10000);
+setInterval(createFirework, 10000);
 </script>
 </body>
 </html>
