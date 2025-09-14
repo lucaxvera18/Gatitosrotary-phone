@@ -42,13 +42,25 @@
             flex-direction: column;
             align-items: center;
             opacity: 0;
-            animation: fadeInOut 6s infinite;
+            animation: reveal-with-fireworks 6s infinite;
         }
-
-        @keyframes fadeInOut {
-            0%, 100% { opacity: 0; transform: scale(0.9); }
-            15%, 50% { opacity: 1; transform: scale(1); }
-            65%, 90% { opacity: 0; transform: scale(0.9); }
+        
+        /* Animación para sincronizar el mensaje con los fuegos artificiales */
+        @keyframes reveal-with-fireworks {
+            0%, 25%, 80%, 100% {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            30% {
+                opacity: 1;
+                transform: scale(1.05);
+                text-shadow: 0 0 15px var(--text-color), 0 0 25px var(--text-color);
+            }
+            45%, 75% {
+                opacity: 1;
+                transform: scale(1);
+                text-shadow: 0 0 10px var(--text-color), 0 0 20px var(--text-color);
+            }
         }
 
         /* --- Estilos del mensaje --- */
@@ -76,204 +88,115 @@
             border-radius: 50%;
             box-shadow: 0 0 10px var(--heart-color), 0 0 15px var(--heart-color);
         }
-
-        /* Generamos la forma del corazón con partículas posicionadas */
-        .heart-particle:before,
-        .heart-particle:after {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: inherit;
-            border-radius: inherit;
-            box-shadow: inherit;
-        }
         
-        /* Mitad izquierda del corazón */
-        .heart-particle:nth-child(1) { top: 30px; left: 100px; }
-        .heart-particle:nth-child(2) { top: 20px; left: 80px; }
-        .heart-particle:nth-child(3) { top: 15px; left: 60px; }
-        .heart-particle:nth-child(4) { top: 20px; left: 40px; }
-        .heart-particle:nth-child(5) { top: 30px; left: 20px; }
-        .heart-particle:nth-child(6) { top: 50px; left: 10px; }
-        .heart-particle:nth-child(7) { top: 70px; left: 10px; }
-        .heart-particle:nth-child(8) { top: 90px; left: 20px; }
-        .heart-particle:nth-child(9) { top: 110px; left: 35px; }
-        .heart-particle:nth-child(10) { top: 130px; left: 50px; }
-        .heart-particle:nth-child(11) { top: 150px; left: 70px; }
-        .heart-particle:nth-child(12) { top: 170px; left: 90px; }
-        
-        /* Mitad derecha del corazón (reflejo) */
-        .heart-particle:nth-child(13) { top: 20px; left: 120px; }
-        .heart-particle:nth-child(14) { top: 15px; left: 140px; }
-        .heart-particle:nth-child(15) { top: 20px; left: 160px; }
-        .heart-particle:nth-child(16) { top: 30px; left: 180px; }
-        .heart-particle:nth-child(17) { top: 50px; left: 190px; }
-        .heart-particle:nth-child(18) { top: 70px; left: 190px; }
-        .heart-particle:nth-child(19) { top: 90px; left: 180px; }
-        .heart-particle:nth-child(20) { top: 110px; left: 165px; }
-        .heart-particle:nth-child(21) { top: 130px; left: 150px; }
-        .heart-particle:nth-child(22) { top: 150px; left: 130px; }
-        .heart-particle:nth-child(23) { top: 170px; left: 110px; }
-        .heart-particle:nth-child(24) { top: 185px; left: 100px; } /* Punta */
+        .heart-particle:nth-child(1) { top: 30px; left: 100px; } .heart-particle:nth-child(2) { top: 20px; left: 80px; }
+        .heart-particle:nth-child(3) { top: 15px; left: 60px; } .heart-particle:nth-child(4) { top: 20px; left: 40px; }
+        .heart-particle:nth-child(5) { top: 30px; left: 20px; } .heart-particle:nth-child(6) { top: 50px; left: 10px; }
+        .heart-particle:nth-child(7) { top: 70px; left: 10px; } .heart-particle:nth-child(8) { top: 90px; left: 20px; }
+        .heart-particle:nth-child(9) { top: 110px; left: 35px; } .heart-particle:nth-child(10) { top: 130px; left: 50px; }
+        .heart-particle:nth-child(11) { top: 150px; left: 70px; } .heart-particle:nth-child(12) { top: 170px; left: 90px; }
+        .heart-particle:nth-child(13) { top: 20px; left: 120px; } .heart-particle:nth-child(14) { top: 15px; left: 140px; }
+        .heart-particle:nth-child(15) { top: 20px; left: 160px; } .heart-particle:nth-child(16) { top: 30px; left: 180px; }
+        .heart-particle:nth-child(17) { top: 50px; left: 190px; } .heart-particle:nth-child(18) { top: 70px; left: 190px; }
+        .heart-particle:nth-child(19) { top: 90px; left: 180px; } .heart-particle:nth-child(20) { top: 110px; left: 165px; }
+        .heart-particle:nth-child(21) { top: 130px; left: 150px; } .heart-particle:nth-child(22) { top: 150px; left: 130px; }
+        .heart-particle:nth-child(23) { top: 170px; left: 110px; } .heart-particle:nth-child(24) { top: 185px; left: 100px; }
 
         /* --- Fondo estrellado y estrellas fugaces --- */
-        .stars, .twinkling {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            width: 100%;
-            height: 100%;
-            display: block;
-        }
+        .stars, .twinkling { position: absolute; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100%; display: block; }
+        .stars { background: transparent url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEgAACxIB0t1+/AAAABZ0RVh0Q3JlYXRpb24gVGltZQAxMS8xMi8xMlhq0aEAAAAcdEVYdFNvZnR3YXJlAEFkb2JlIEZpcmV3b3JrcyBDUzbovLKMAAAAVklEQVRoQ+3SSwoAIAwEwfz/07tSo9sGZHYv3UVICJnLSEEi5gJIIiYTQCI2EkAiNhJAIjYSQCI2EkAiNhJAIjYSQCI2EkAiNhJAIjYSQCI2EkAiNhJA8nEDVjAAVYyXv3cAAAAASUVORK5CYII=) repeat top left; z-index: 0; }
+        .twinkling { background: transparent url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEgAACxIB0t1+/AAAABZ0RVh0Q3JlYXRpb24gVGltZQAxMS8xMi8xMlhq0aEAAAAcdEVYdFNvZnR3YXJlAEFkb2JlIEZpcmV3b3JrcyBDUzbovLKMAAAAbElEQVRoQ+3SwQkAIBADwf7/02eBQTkS050FakISkCSImiCIiQiIiQiIiQiIiQiIiQiIiQiIiQiIiQiIiQiIiQiIiQiIiQiIiQiIiQiIiQiIiQiIiQiIiQiIiQiIiQiIiQgIiT0BDNoVCgAlL3eIAAAAAElFTkSuQmCC) repeat top left; animation: move-twink-back 300s linear infinite; z-index: 1; }
+        @keyframes move-twink-back { from { background-position: 0 0; } to { background-position: -10000px 5000px; } }
+        .shooting-star { position: absolute; left: 50%; top: 50%; height: 2px; background: linear-gradient(-45deg, var(--star-color), rgba(255, 255, 255, 0)); border-radius: 999px; filter: drop-shadow(0 0 6px var(--star-color)); animation: tail 3s ease-in-out infinite, shooting 3s ease-in-out infinite; }
+        @keyframes tail { 0% { width: 0; } 30% { width: 100px; } 100% { width: 0; } }
+        @keyframes shooting { 0% { transform: translateX(0); } 100% { transform: translateX(300px); } }
+        .shooting-star:nth-child(2) { top: 30%; left: -50%; animation-delay: 1.2s; } .shooting-star:nth-child(3) { top: 80%; left: -20%; animation-delay: 2.5s; }
 
-        .stars {
-            background: transparent url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEgAACxIB0t1+/AAAABZ0RVh0Q3JlYXRpb24gVGltZQAxMS8xMi8xMlhq0aEAAAAcdEVYdFNvZnR3YXJlAEFkb2JlIEZpcmV3b3JrcyBDUzbovLKMAAAAVklEQVRoQ+3SSwoAIAwEwfz/07tSo9sGZHYv3UVICJnLSEEi5gJIIiYTQCI2EkAiNhJAIjYSQCI2EkAiNhJAIjYSQCI2EkAiNhJAIjYSQCI2EkAiNhJA8nEDVjAAVYyXv3cAAAAASUVORK5CYII=) repeat top left;
-            z-index: 0;
-        }
+        /* --- Fuegos artificiales Mejorados --- */
+        .firework { position: absolute; }
+        .firework:nth-child(4) { left: 20%; top: 30%; }
+        .firework:nth-child(5) { left: 80%; top: 40%; }
+        .firework:nth-child(6) { left: 50%; top: 60%; animation-delay: 2s !important; }
 
-        .twinkling {
-            background: transparent url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEgAACxIB0t1+/AAAABZ0RVh0Q3JlYXRpb24gVGltZQAxMS8xMi8xMlhq0aEAAAAcdEVYdFNvZnR3YXJlAEFkb2JlIEZpcmV3b3JrcyBDUzbovLKMAAAAbElEQVRoQ+3SwQkAIBADwf7/02eBQTkS050FakISkCSImiCIiQiIiQiIiQiIiQiIiQiIiQiIiQiIiQiIiQiIiQiIiQiIiQiIiQiIiQiIiQiIiQiIiQiIiQiIiQiIiQiIiQgIiT0BDNoVCgAlL3eIAAAAAElFTkSuQmCC) repeat top left;
-            animation: move-twink-back 300s linear infinite;
-            z-index: 1;
-        }
-
-        @keyframes move-twink-back {
-            from { background-position: 0 0; }
-            to { background-position: -10000px 5000px; }
-        }
-        
-        .shooting-star {
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            height: 2px;
-            background: linear-gradient(-45deg, var(--star-color), rgba(255, 255, 255, 0));
-            border-radius: 999px;
-            filter: drop-shadow(0 0 6px var(--star-color));
-            animation: tail 3s ease-in-out infinite, shooting 3s ease-in-out infinite;
-        }
-
-        @keyframes tail {
-            0% { width: 0; }
-            30% { width: 100px; }
-            100% { width: 0; }
-        }
-
-        @keyframes shooting {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(300px); }
-        }
-        
-        .shooting-star:nth-child(2) { top: 30%; left: -50%; animation-delay: 1.2s; }
-        .shooting-star:nth-child(3) { top: 80%; left: -20%; animation-delay: 2.5s; }
-
-        /* --- Fuegos artificiales --- */
-        .firework {
-            position: absolute;
-        }
-        
-        .firework:nth-child(4) { left: 20%; top: 30%; transform: scale(0.8); }
-        .firework:nth-child(5) { left: 80%; top: 40%; transform: scale(0.9); }
-        .firework:nth-child(6) { left: 50%; top: 60%; transform: scale(0.7); animation-delay: 2s !important; }
-
+        /* El cohete que sube */
         .firework::before {
+            content: '';
+            position: absolute;
+            width: 3px;
+            height: 15px;
+            background: gold;
+            border-radius: 2px;
+            filter: drop-shadow(0 0 5px gold);
+            animation: launch 6s infinite ease-in;
+        }
+
+        /* La explosión */
+        .firework::after {
             content: '';
             position: absolute;
             width: 4px;
             height: 4px;
             border-radius: 50%;
-            animation: firework-anim 4s infinite;
+            opacity: 0;
+            animation: explode 6s infinite ease-out;
         }
 
-        @keyframes firework-anim {
-            0% {
-                transform: scale(1);
-                opacity: 1;
-                box-shadow: 0 0 0 0 rgba(255,255,255,0.7), 0 0 0 0 rgba(255,0,0,0.7), 0 0 0 0 rgba(255,255,0,0.7), 0 0 0 0 rgba(0,255,0,0.7);
-            }
-            25% { opacity: 1; }
-            100% {
-                transform: scale(20);
-                opacity: 0;
-                box-shadow: 0 20px 40px 10px rgba(255,255,255,0), 0 -20px 40px 10px rgba(255,0,0,0), -20px 0 40px 10px rgba(255,255,0,0), 20px 0 40px 10px rgba(0,255,0,0);
-            }
+        @keyframes launch {
+            0% { transform: translateY(150px); opacity: 1; }
+            25% { transform: translateY(0); opacity: 1; }
+            26%, 100% { transform: translateY(0); opacity: 0; }
         }
 
-        /* --- Gatitos CSS --- */
-        .cat {
-            position: absolute;
-            bottom: 0;
-            width: 100px;
-            height: 80px;
-            z-index: 2;
-        }
-
-        .cat-left { left: 15px; }
-        .cat-right { right: 15px; transform: scaleX(-1); }
-
-        .cat-body {
-            position: absolute;
-            bottom: 0;
-            width: 70px;
-            height: 40px;
-            background: var(--cat-color);
-            border-radius: 50% 50% 0 0;
-        }
-
-        .cat-head {
-            position: absolute;
-            bottom: 25px;
-            left: 10px;
-            width: 50px;
-            height: 45px;
-            background: var(--cat-color);
-            border-radius: 50%;
-        }
-
-        .cat-ear {
-            position: absolute;
-            top: -5px;
-            width: 0;
-            height: 0;
-            border-left: 10px solid transparent;
-            border-right: 10px solid transparent;
-            border-bottom: 20px solid var(--cat-color);
-        }
-        .ear-left { left: 0; }
-        .ear-right { right: 0; }
-
-        .cat-tail {
-            position: absolute;
-            bottom: 0;
-            left: 65px;
-            width: 15px;
-            height: 50px;
-            background: var(--cat-color);
-            border-radius: 20px 20px 0 0;
-            transform: rotate(-10deg);
-        }
-
-        .cat-cloud {
-            position: absolute;
-            bottom: -5px;
-            left: -15px;
-            width: 100px;
-            height: 20px;
-            background: pink;
-            border-radius: 20px;
+        @keyframes explode {
+            0%, 25% { transform: scale(1); opacity: 0; }
+            26% { transform: scale(1); opacity: 1; box-shadow: 0 0 0 0 #fff7, 0 0 0 0 #f007, 0 0 0 0 #ff07, 0 0 0 0 #0f07; }
+            100% { transform: scale(20); opacity: 0; box-shadow: 0 40px 80px 10px #fff0, 0 -40px 80px 10px #f000, -40px 0 80px 10px #ff00, 40px 0 80px 10px #0f00; }
         }
         
-        .cat-cloud::before, .cat-cloud::after {
+        /* --- Gatitos CSS y Partículas de Corazón --- */
+        .cat { position: absolute; bottom: 0; width: 100px; height: 80px; z-index: 2; }
+        .cat-left { left: 15px; }
+        .cat-right { right: 15px; transform: scaleX(-1); }
+        .cat-body { position: absolute; bottom: 0; width: 70px; height: 40px; background: var(--cat-color); border-radius: 50% 50% 0 0; }
+        .cat-head { position: absolute; bottom: 25px; left: 10px; width: 50px; height: 45px; background: var(--cat-color); border-radius: 50%; }
+        .cat-ear { position: absolute; top: -5px; width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-bottom: 20px solid var(--cat-color); }
+        .ear-left { left: 0; }
+        .ear-right { right: 0; }
+        .cat-tail { position: absolute; bottom: 0; left: 65px; width: 15px; height: 50px; background: var(--cat-color); border-radius: 20px 20px 0 0; transform: rotate(-10deg); }
+        
+        /* Partículas de corazón de los gatos */
+        .heart-particle-emitter { position: absolute; top: -10px; left: 30px; }
+        .cat-heart {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: var(--heart-color);
+            border-radius: 4px 4px 0 0;
+            transform: rotate(-45deg);
+            opacity: 0;
+            animation: floatUp 4s infinite;
+        }
+        .cat-heart::before {
             content: '';
             position: absolute;
-            background: pink;
+            width: 8px;
+            height: 8px;
+            background: var(--heart-color);
             border-radius: 50%;
+            top: -4px;
+            left: 0;
         }
-        .cat-cloud::before { width: 40px; height: 40px; top: -20px; left: 10px; }
-        .cat-cloud::after { width: 50px; height: 50px; top: -25px; left: 40px; }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(-45deg) scale(1); opacity: 1; }
+            100% { transform: translateY(-150px) rotate(-45deg) scale(0.5); opacity: 0; }
+        }
+
+        .cat-heart:nth-child(1) { animation-delay: 0s; left: 0px; }
+        .cat-heart:nth-child(2) { animation-delay: 0.3s; left: 10px; transform: scale(0.8) rotate(-45deg); }
+        .cat-heart:nth-child(3) { animation-delay: 0.8s; left: -10px; transform: scale(1.1) rotate(-45deg); }
+        .cat-heart:nth-child(4) { animation-delay: 1.5s; left: 5px; }
+        .cat-heart:nth-child(5) { animation-delay: 2.2s; left: -5px; transform: scale(0.9) rotate(-45deg); }
 
 
         /* --- Media Queries para Dispositivos Móviles --- */
@@ -281,17 +204,15 @@
             .message {
                 font-size: 1.8rem;
             }
-
             .heart {
                 transform: scale(0.7);
             }
-            
             .cat {
                 transform: scale(0.7);
             }
-
             .cat-left { left: -10px; }
-            .cat-right { right: -10px; transform: scaleX(-0.7) scaleY(0.7); }
+            /* Se corrige la transformación para que no se deforme */
+            .cat-right { right: -10px; transform: scale(0.7) scaleX(-1); }
         }
     </style>
 </head>
@@ -327,7 +248,10 @@
         </div>
 
         <div class="cat cat-left">
-            <div class="cat-cloud"></div>
+            <div class="heart-particle-emitter">
+                <div class="cat-heart"></div><div class="cat-heart"></div>
+                <div class="cat-heart"></div><div class="cat-heart"></div><div class="cat-heart"></div>
+            </div>
             <div class="cat-body"></div>
             <div class="cat-tail"></div>
             <div class="cat-head">
@@ -336,7 +260,10 @@
             </div>
         </div>
         <div class="cat cat-right">
-            <div class="cat-cloud"></div>
+             <div class="heart-particle-emitter">
+                <div class="cat-heart"></div><div class="cat-heart"></div>
+                <div class="cat-heart"></div><div class="cat-heart"></div><div class="cat-heart"></div>
+            </div>
             <div class="cat-body"></div>
             <div class="cat-tail"></div>
             <div class="cat-head">
